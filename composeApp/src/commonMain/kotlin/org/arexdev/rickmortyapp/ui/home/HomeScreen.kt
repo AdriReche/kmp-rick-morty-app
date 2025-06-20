@@ -1,4 +1,4 @@
-package com.physiosmart.ui.home
+package org.arexdev.rickmortyapp.ui.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.NavigationBar
@@ -11,7 +11,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.physiosmart.ui.core.navigation.bottomnavigation.NavigationBottomWrapper
+import org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation.NavigationBottomWrapper
 import org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation.BottomBarItem
 
 @Composable

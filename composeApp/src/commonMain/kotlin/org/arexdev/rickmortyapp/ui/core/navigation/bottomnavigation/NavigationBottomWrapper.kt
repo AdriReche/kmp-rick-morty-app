@@ -1,4 +1,4 @@
-package com.physiosmart.ui.core.navigation.bottomnavigation
+package org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
