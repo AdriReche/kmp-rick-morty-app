@@ -48,14 +48,12 @@ fun CharactersScreen() {
     val state by charactersViewModel.state.collectAsState()
     val characters = state.characters.collectAsLazyPagingItems()
 
-    state.characterOfTheDay?.let {
-        CharactersGridList(characters, state.characterOfTheDay)
-    }
+        CharactersGridList(characters, state)
 
 }
 
 @Composable
-fun CharactersGridList(characters: LazyPagingItems<CharacterModel>, characterOfTheDay: CharacterModel?) {
+fun CharactersGridList(characters: LazyPagingItems<CharacterModel>, state: CharactersState) {
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         columns = GridCells.Fixed(2),
@@ -63,7 +61,7 @@ fun CharactersGridList(characters: LazyPagingItems<CharacterModel>, characterOfT
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
-            CharacterOfTheDay(characterOfTheDay)
+            CharacterOfTheDay(state.characterOfTheDay)
         }
 
         when {
@@ -92,9 +90,9 @@ fun CharactersGridList(characters: LazyPagingItems<CharacterModel>, characterOfT
                     }
                 }
 
-                if (characters.loadState.refresh is LoadState.Loading) {
+                if (characters.loadState.append is LoadState.Loading) {
                     item(span = { GridItemSpan(2) }) {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Box(Modifier.fillMaxHeight().height(100.dp), contentAlignment = Alignment.Center) {
                             CircularProgressIndicator(Modifier.size(64.dp), color = Color.Red)
                         }
                     }
@@ -146,8 +144,8 @@ fun CharacterOfTheDay(
         shape = RoundedCornerShape(12)
     ) {
         if (characterModel == null) {
-            Box(contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(color = Color.Green)
             }
         } else {
             Box(contentAlignment = Alignment.BottomStart) {
