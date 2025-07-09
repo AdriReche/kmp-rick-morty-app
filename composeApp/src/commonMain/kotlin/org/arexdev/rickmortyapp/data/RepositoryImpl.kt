@@ -37,8 +37,8 @@ class RepositoryImpl(
         ).flow
     }
 
-    override suspend fun getCharacterDB(): CharacterOfTheDayModel? {
-        return rickMortyDatabase.getPreferencesDao().getCharacterOfTheDayDb()?.toDomainModel()
+    override suspend fun getCharacterDbBySelectedDate(selectedDay : String): CharacterOfTheDayModel? {
+        return rickMortyDatabase.getPreferencesDao().getCharacterOfTheDayDb(selectedDay)?.toDomainModel()
     }
 
     override suspend fun saveCharacterOfTheDay(characterOfTheDayModel: CharacterOfTheDayModel) {

@@ -13,8 +13,8 @@ class GetRandomCharacter(val repository: Repository) {
 
     suspend operator fun invoke(): CharacterModel {
 
-        val characterOfTheDay = repository.getCharacterDB()
         val selectedDay = getCurrentDayOfTheYear()
+        val characterOfTheDay = repository.getCharacterDbBySelectedDate(selectedDay)
 
         return if (characterOfTheDay != null && characterOfTheDay.selectedDay == selectedDay) {
             characterOfTheDay.characterModel

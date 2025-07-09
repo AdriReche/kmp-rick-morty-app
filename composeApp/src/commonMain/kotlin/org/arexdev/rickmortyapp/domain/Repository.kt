@@ -8,6 +8,6 @@ import org.arexdev.rickmortyapp.domain.model.CharacterOfTheDayModel
 interface Repository {
     suspend fun getSingleCharacter(id: String): CharacterModel
     fun getAllCharacters(): Flow<PagingData<CharacterModel>>
-    suspend fun getCharacterDB(): CharacterOfTheDayModel?
+    suspend fun getCharacterDbBySelectedDate(selectedDay : String): CharacterOfTheDayModel?
     suspend fun saveCharacterOfTheDay(characterOfTheDayModel: CharacterOfTheDayModel)
 }
