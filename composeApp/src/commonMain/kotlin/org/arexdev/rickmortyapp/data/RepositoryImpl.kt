@@ -3,12 +3,19 @@ package org.arexdev.rickmortyapp.data
 import app.cash.paging.Pager
 import app.cash.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import org.arexdev.rickmortyapp.data.database.RickMortyDatabase
+import org.arexdev.rickmortyapp.data.database.entity.CharacterOfTheDayEntity
 import org.arexdev.rickmortyapp.data.remote.ApiService
 import org.arexdev.rickmortyapp.data.remote.paging.CharactersPagingSource
 import org.arexdev.rickmortyapp.domain.Repository
 import org.arexdev.rickmortyapp.domain.model.CharacterModel
+import org.arexdev.rickmortyapp.domain.model.CharacterOfTheDayModel
 
-class RepositoryImpl(private val apiService: ApiService, private val charactersPagingSource: CharactersPagingSource) :
+class RepositoryImpl(
+    private val apiService: ApiService,
+    private val charactersPagingSource: CharactersPagingSource,
+    private val rickMortyDatabase: RickMortyDatabase
+) :
     Repository {
 
     companion object {
@@ -28,5 +35,14 @@ class RepositoryImpl(private val apiService: ApiService, private val charactersP
             ),
             pagingSourceFactory = { charactersPagingSource }
         ).flow
+    }
+
+    override suspend fun getCharacterDB(): CharacterOfTheDayModel? {
+        return rickMortyDatabase.getPreferencesDao().getCharacterOfTheDayDb()?.toDomainModel()
+    }
+
+    override suspend fun saveCharacterOfTheDay(characterOfTheDayModel: CharacterOfTheDayModel) {
+        val characterOfTheDayEntity = CharacterOfTheDayEntity.fromDomainModel(characterOfTheDayModel)
+        return rickMortyDatabase.getPreferencesDao().saveCharacterOfTheDayDb(characterOfTheDayEntity)
     }
 }
