@@ -16,17 +16,18 @@ class GetRandomCharacter(val repository: Repository) {
         val selectedDay = getCurrentDayOfTheYear()
         val characterOfTheDay = repository.getCharacterDbBySelectedDate(selectedDay)
 
-        return if (characterOfTheDay != null && characterOfTheDay.selectedDay == selectedDay) {
+        val result = if (characterOfTheDay != null && characterOfTheDay.selectedDay == selectedDay) {
             characterOfTheDay.characterModel
         } else {
-            val result = getRandomCharacter()
+            val randomCharacter = getRandomCharacter()
             val characterOfTheDayModel = CharacterOfTheDayModel(
-                characterModel = result,
+                characterModel = randomCharacter,
                 selectedDay = selectedDay
             )
             repository.saveCharacterOfTheDay(characterOfTheDayModel)
-            return result
+            randomCharacter
         }
+        return result
     }
 
     private suspend fun getRandomCharacter(): CharacterModel {
