@@ -27,7 +27,12 @@ viewmodel = "2.8.0"
 coil = "3.0.0-alpha08"
 #Pagination
 paginComposeCommon = "3.3.0-alpha02-0.4.0"
-
+#Dates
+kotlinxDatetime = "0.6.0"
+#Room
+roomCommon = "2.7.2"
+ksp = "2.1.21-2.0.1" # this version should match with kotlin version to avoid crashes
+androidx-sqliteBundled = "2.5.2"
 
 
 [libraries]
@@ -71,6 +76,16 @@ coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor", ve
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "paginComposeCommon" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paginComposeCommon" }
 
+#Date
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+
+#Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomCommon" }
+room-runtime-android = { group = "androidx.room", name = "room-runtime-android", version.ref = "roomCommon" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCommon" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidx-sqliteBundled" }
+
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -78,3 +93,4 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kspCompose = { id = "com.google.devtools.ksp", version.ref = "ksp" }
