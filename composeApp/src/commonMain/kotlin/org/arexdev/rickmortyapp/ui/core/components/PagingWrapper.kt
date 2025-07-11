@@ -93,7 +93,7 @@ fun <T : Any> PagingWrapper(
 
 
             if (pagingItems.loadState.append is LoadState.Loading) {
-                extraItemsView()
+                initialView()
             }
         }
     }
