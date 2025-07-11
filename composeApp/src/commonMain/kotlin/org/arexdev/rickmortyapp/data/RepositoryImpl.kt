@@ -7,13 +7,16 @@ import org.arexdev.rickmortyapp.data.database.RickMortyDatabase
 import org.arexdev.rickmortyapp.data.database.entity.CharacterOfTheDayEntity
 import org.arexdev.rickmortyapp.data.remote.ApiService
 import org.arexdev.rickmortyapp.data.remote.paging.CharactersPagingSource
+import org.arexdev.rickmortyapp.data.remote.paging.EpisodesPagingSource
 import org.arexdev.rickmortyapp.domain.Repository
 import org.arexdev.rickmortyapp.domain.model.CharacterModel
 import org.arexdev.rickmortyapp.domain.model.CharacterOfTheDayModel
+import org.arexdev.rickmortyapp.domain.model.EpisodeModel
 
 class RepositoryImpl(
     private val apiService: ApiService,
     private val charactersPagingSource: CharactersPagingSource,
+    private val episodesPagingSource: EpisodesPagingSource,
     private val rickMortyDatabase: RickMortyDatabase
 ) :
     Repository {
@@ -34,6 +37,16 @@ class RepositoryImpl(
                 prefetchDistance = PREFETCH_ITEMS
             ),
             pagingSourceFactory = { charactersPagingSource }
+        ).flow
+    }
+
+    override fun getAllEpisodes(): Flow<PagingData<EpisodeModel>> {
+        return Pager(
+            config = _root_ide_package_.app.cash.paging.PagingConfig(
+                pageSize = MAX_ITEMS,
+                prefetchDistance = PREFETCH_ITEMS
+            ),
+            pagingSourceFactory = { episodesPagingSource }
         ).flow
     }
 
