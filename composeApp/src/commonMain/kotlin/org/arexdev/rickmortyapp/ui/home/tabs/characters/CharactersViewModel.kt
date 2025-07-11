@@ -2,6 +2,7 @@ package org.arexdev.rickmortyapp.ui.home.tabs.characters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.paging.cachedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +30,6 @@ class CharactersViewModel(val getRandomCharacter: GetRandomCharacter, private va
     }
 
     private fun getAllCharacters() {
-        _state.update { state -> state.copy(characters = repository.getAllCharacters()) }
+        _state.update { state -> state.copy(characters = repository.getAllCharacters().cachedIn(viewModelScope)) }
     }
 }
