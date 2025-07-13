@@ -3,17 +3,12 @@ package org.arexdev.rickmortyapp.ui.home.tabs.characters
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,11 +27,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.LoadState
-import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import org.arexdev.rickmortyapp.domain.model.CharacterModel
+import org.arexdev.rickmortyapp.ui.core.components.PagingLoadingState
+import org.arexdev.rickmortyapp.ui.core.components.PagingType
+import org.arexdev.rickmortyapp.ui.core.components.PagingWrapper
 import org.arexdev.rickmortyapp.ui.core.ex.vertical
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -48,58 +44,19 @@ fun CharactersScreen() {
     val state by charactersViewModel.state.collectAsState()
     val characters = state.characters.collectAsLazyPagingItems()
 
-        CharactersGridList(characters, state)
-
-}
-
-@Composable
-fun CharactersGridList(characters: LazyPagingItems<CharacterModel>, state: CharactersState) {
-    LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-        columns = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item(span = { GridItemSpan(2) }) {
-            CharacterOfTheDay(state.characterOfTheDay)
-        }
-
-        when {
-            characters.loadState.refresh is LoadState.Loading && characters.itemCount == 0 -> {
-                //Initial loading
-                item(span = { GridItemSpan(2) }) {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(Modifier.size(64.dp), color = Color.Red)
-                    }
-                }
-
+    Box(Modifier.fillMaxSize())
+    {
+        PagingWrapper(
+            pagingType = PagingType.VERTICAL_GRID,
+            pagingItems = characters,
+            initialView = { PagingLoadingState() },
+            extraItemsView = { CharacterOfTheDay(state.characterOfTheDay) },
+            itemView = {
+                CharacterItemList(it)
             }
-
-            characters.loadState.refresh is LoadState.NotLoading && characters.itemCount == 0 -> {
-                //Empty result
-                item {
-                    Text("No characters found")
-                }
-            }
-
-            else -> {
-
-                items(characters.itemCount) { index ->
-                    characters[index]?.let { characterModel ->
-                        CharacterItemList(characterModel)
-                    }
-                }
-
-                if (characters.loadState.append is LoadState.Loading) {
-                    item(span = { GridItemSpan(2) }) {
-                        Box(Modifier.fillMaxHeight().height(100.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(Modifier.size(64.dp), color = Color.Red)
-                        }
-                    }
-                }
-            }
-        }
+        )
     }
+
 }
 
 @Composable
