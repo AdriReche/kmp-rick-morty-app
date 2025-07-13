@@ -1,6 +1,7 @@
 package org.arexdev.rickmortyapp.data
 
 import app.cash.paging.Pager
+import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import org.arexdev.rickmortyapp.data.database.RickMortyDatabase
@@ -32,7 +33,7 @@ class RepositoryImpl(
 
     override fun getAllCharacters(): Flow<PagingData<CharacterModel>> {
         return Pager(
-            config = _root_ide_package_.app.cash.paging.PagingConfig(
+            config = PagingConfig(
                 pageSize = MAX_ITEMS,
                 prefetchDistance = PREFETCH_ITEMS
             ),
@@ -42,7 +43,7 @@ class RepositoryImpl(
 
     override fun getAllEpisodes(): Flow<PagingData<EpisodeModel>> {
         return Pager(
-            config = _root_ide_package_.app.cash.paging.PagingConfig(
+            config = PagingConfig(
                 pageSize = MAX_ITEMS,
                 prefetchDistance = PREFETCH_ITEMS
             ),
@@ -50,7 +51,7 @@ class RepositoryImpl(
         ).flow
     }
 
-    override suspend fun getCharacterDbBySelectedDate(selectedDay : String): CharacterOfTheDayModel? {
+    override suspend fun getCharacterDbBySelectedDate(selectedDay: String): CharacterOfTheDayModel? {
         return rickMortyDatabase.getPreferencesDao().getCharacterOfTheDayDb(selectedDay)?.toDomainModel()
     }
 
