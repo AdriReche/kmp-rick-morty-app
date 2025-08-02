@@ -39,7 +39,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun CharactersScreen() {
+fun CharactersScreen(navigateToDetail: (CharacterModel) -> Unit) {
     val charactersViewModel = koinViewModel<CharactersViewModel>()
     val state by charactersViewModel.state.collectAsState()
     val characters = state.characters.collectAsLazyPagingItems()
@@ -52,7 +52,9 @@ fun CharactersScreen() {
             initialView = { PagingLoadingState() },
             extraItemsView = { CharacterOfTheDay(state.characterOfTheDay) },
             itemView = {
-                CharacterItemList(it)
+                CharacterItemList(it) { characterModel ->
+                    navigateToDetail(characterModel)
+                }
             }
         )
     }
@@ -60,13 +62,13 @@ fun CharactersScreen() {
 }
 
 @Composable
-fun CharacterItemList(characterModel: CharacterModel) {
+fun CharacterItemList(characterModel: CharacterModel, onItemSelected: (CharacterModel) -> Unit) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(24))
             .border(2.dp, Color.Green, shape = RoundedCornerShape(0, 24, 0, 24)).fillMaxSize()
             .clickable {
-                // Handle click event
+                onItemSelected(characterModel)
             },
         contentAlignment = Alignment.BottomCenter
     ) {

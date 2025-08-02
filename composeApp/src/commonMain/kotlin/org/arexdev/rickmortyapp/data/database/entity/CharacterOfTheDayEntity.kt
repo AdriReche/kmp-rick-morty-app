@@ -2,6 +2,8 @@ package org.arexdev.rickmortyapp.data.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.arexdev.rickmortyapp.domain.model.CharacterModel
 import org.arexdev.rickmortyapp.domain.model.CharacterOfTheDayModel
 
@@ -12,6 +14,10 @@ data class CharacterOfTheDayEntity(
     val name: String,
     val isAlive: Boolean,
     val image: String,
+    val species: String,
+    val gender: String,
+    val origin: String,
+    val episodes: String,
     val selectedDay: String
 ) {
     fun toDomainModel(): CharacterOfTheDayModel {
@@ -20,7 +26,11 @@ data class CharacterOfTheDayEntity(
                 id = id,
                 name = name,
                 isAlive = isAlive,
-                image = image
+                image = image,
+                species = species,
+                gender = gender,
+                origin = origin,
+                episodes = Json.decodeFromString<List<String>>(episodes)
             ),
             selectedDay = selectedDay
         )
@@ -33,7 +43,11 @@ data class CharacterOfTheDayEntity(
                 name = model.characterModel.name,
                 isAlive = model.characterModel.isAlive,
                 image = model.characterModel.image,
-                selectedDay = model.selectedDay
+                selectedDay = model.selectedDay,
+                species = model.characterModel.species,
+                gender = model.characterModel.gender,
+                origin = model.characterModel.origin,
+                episodes = Json.encodeToString(model.characterModel.episodes)
             )
         }
     }

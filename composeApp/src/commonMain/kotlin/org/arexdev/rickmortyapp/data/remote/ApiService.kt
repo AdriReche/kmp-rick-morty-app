@@ -5,6 +5,7 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.arexdev.rickmortyapp.data.remote.response.CharacterResponse
 import org.arexdev.rickmortyapp.data.remote.response.CharactersWrapperResponse
+import org.arexdev.rickmortyapp.data.remote.response.EpisodeResponse
 import org.arexdev.rickmortyapp.data.remote.response.EpisodesWrapperResponse
 
 class ApiService(private val client: HttpClient) {
@@ -25,4 +26,9 @@ class ApiService(private val client: HttpClient) {
         }.body()
     }
 
+    suspend fun getEpisodes(episodes: String): List<EpisodeResponse> =
+        client.get("api/episode/$episodes").body()
+
+    suspend fun getSingleEpisode(episodeId: String): EpisodeResponse =
+        client.get("api/episode/$episodeId").body()
 }
