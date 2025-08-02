@@ -13,16 +13,16 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation.NavigationBottomWrapper
 import org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation.BottomBarItem
+import org.arexdev.rickmortyapp.ui.core.navigation.bottomnavigation.NavigationBottomWrapper
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(mainNavController: NavHostController) {
     val items = listOf(BottomBarItem.Episodes(), BottomBarItem.Characters())
-    val navController = rememberNavController()
-    Scaffold(bottomBar = { BottomNavigationBar(items, navController) }) { padding ->
-        Box (modifier = Modifier.padding(padding)) {
-            NavigationBottomWrapper(navController)
+    val bottomBarNavController = rememberNavController()
+    Scaffold(bottomBar = { BottomNavigationBar(items, bottomBarNavController) }) { padding ->
+        Box(modifier = Modifier.padding(padding)) {
+            NavigationBottomWrapper(bottomBarNavController, mainNavController)
         }
     }
 }

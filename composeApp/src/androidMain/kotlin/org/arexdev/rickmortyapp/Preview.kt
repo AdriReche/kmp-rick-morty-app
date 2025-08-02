@@ -14,6 +14,10 @@ fun Preview() {
             name = "Rick Sanchez",
             isAlive = true,
             image = "",
+            species = "Human",
+            gender = "Male",
+            origin = "Earth",
+            episodes = listOf("1", "2", "3")
         )
     )
 }

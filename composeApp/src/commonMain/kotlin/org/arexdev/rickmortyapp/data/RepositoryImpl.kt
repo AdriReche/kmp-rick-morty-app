@@ -19,8 +19,7 @@ class RepositoryImpl(
     private val charactersPagingSource: CharactersPagingSource,
     private val episodesPagingSource: EpisodesPagingSource,
     private val rickMortyDatabase: RickMortyDatabase
-) :
-    Repository {
+) : Repository {
 
     companion object {
         private const val MAX_ITEMS = 20
@@ -34,21 +33,28 @@ class RepositoryImpl(
     override fun getAllCharacters(): Flow<PagingData<CharacterModel>> {
         return Pager(
             config = PagingConfig(
-                pageSize = MAX_ITEMS,
-                prefetchDistance = PREFETCH_ITEMS
-            ),
-            pagingSourceFactory = { charactersPagingSource }
-        ).flow
+                pageSize = MAX_ITEMS, prefetchDistance = PREFETCH_ITEMS
+            ), pagingSourceFactory = { charactersPagingSource }).flow
     }
 
     override fun getAllEpisodes(): Flow<PagingData<EpisodeModel>> {
         return Pager(
             config = PagingConfig(
-                pageSize = MAX_ITEMS,
-                prefetchDistance = PREFETCH_ITEMS
-            ),
-            pagingSourceFactory = { episodesPagingSource }
-        ).flow
+                pageSize = MAX_ITEMS, prefetchDistance = PREFETCH_ITEMS
+            ), pagingSourceFactory = { episodesPagingSource }).flow
+    }
+
+    override suspend fun getEpisodesForCharacter(episodes: List<String>): List<EpisodeModel> {
+        if (episodes.isEmpty()) return emptyList()
+
+        return if (episodes.size > 1) {
+            apiService.getEpisodes(episodes.joinToString(",")).map { episodeResponse ->
+                episodeResponse.toDomainModel()
+            }
+        } else {
+            listOf(apiService.getSingleEpisode(episodes.first()).toDomainModel())
+        }
+
     }
 
     override suspend fun getCharacterDbBySelectedDate(selectedDay: String): CharacterOfTheDayModel? {
