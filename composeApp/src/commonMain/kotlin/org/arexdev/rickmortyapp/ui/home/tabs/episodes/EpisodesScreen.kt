@@ -1,6 +1,6 @@
 package org.arexdev.rickmortyapp.ui.home.tabs.episodes
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,10 +25,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import org.arexdev.rickmortyapp.domain.model.EpisodeModel
 import org.arexdev.rickmortyapp.domain.model.SeasonEpisode
+import org.arexdev.rickmortyapp.ui.core.BackgroundPrimaryColor
+import org.arexdev.rickmortyapp.ui.core.DefaultTextColor
+import org.arexdev.rickmortyapp.ui.core.Green
+import org.arexdev.rickmortyapp.ui.core.PlaceholderColor
 import org.arexdev.rickmortyapp.ui.core.components.PagingLoadingState
 import org.arexdev.rickmortyapp.ui.core.components.PagingType
 import org.arexdev.rickmortyapp.ui.core.components.PagingWrapper
@@ -37,6 +44,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import rickmortyapp.composeapp.generated.resources.Res
+import rickmortyapp.composeapp.generated.resources.placeholder
 import rickmortyapp.composeapp.generated.resources.portal
 import rickmortyapp.composeapp.generated.resources.season1
 import rickmortyapp.composeapp.generated.resources.season2
@@ -54,8 +62,9 @@ fun EpisodesScreen() {
     val state by episodesViewModel.state.collectAsState()
     val episodes = state.episodes.collectAsLazyPagingItems()
 
-    Column(Modifier.fillMaxSize())
+    Column(Modifier.fillMaxSize().background(BackgroundPrimaryColor))
     {
+        Spacer(Modifier.height(16.dp))
         PagingWrapper(
             pagingType = PagingType.ROW,
             pagingItems = episodes,
@@ -70,25 +79,44 @@ fun EpisodesScreen() {
 
 @Composable
 fun EpisodePlayer(playVideo: String, onCloseVideo: () -> Unit) {
-    AnimatedVisibility(playVideo.isNotBlank()) {
-        ElevatedCard(
-            modifier = Modifier.fillMaxWidth().height(250.dp).padding(16.dp)
-                .border(3.dp, Color.Green, CardDefaults.elevatedShape)
-        ) {
-            Box(modifier = Modifier.background(Color.Black)) {
-                Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(16.dp)) {
-                    VideoPlayer(modifier = Modifier.fillMaxWidth().height(200.dp), url = playVideo)
+    AnimatedContent(playVideo.isNotBlank()) { condition ->
+        if (condition) {
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth().height(250.dp).padding(16.dp)
+                    .border(3.dp, Green, CardDefaults.elevatedShape)
+            ) {
+                Box(modifier = Modifier.background(Color.Black)) {
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(16.dp)) {
+                        VideoPlayer(modifier = Modifier.fillMaxWidth().height(200.dp), url = playVideo)
+                    }
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Image(
+                            painter = painterResource(Res.drawable.portal),
+                            contentDescription = "",
+                            modifier = Modifier.padding(8.dp).size(40.dp).clickable { onCloseVideo() }
+                        )
+                    }
                 }
-                Row {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Image(
-                        painter = painterResource(Res.drawable.portal),
-                        contentDescription = "",
-                        modifier = Modifier.padding(8.dp).size(40.dp).clickable { onCloseVideo() }
+            }
+        } else {
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                colors = CardDefaults.elevatedCardColors(containerColor = PlaceholderColor)
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(painter = painterResource(Res.drawable.placeholder), contentDescription = null)
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Aw, jeez, you gotta click the video, guys! I mean, it might be important or something!",
+                        color = DefaultTextColor,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier.padding(16.dp)
                     )
                 }
             }
         }
+
     }
 }
 
@@ -96,11 +124,14 @@ fun EpisodePlayer(playVideo: String, onCloseVideo: () -> Unit) {
 fun EpisodeItemList(episodeModel: EpisodeModel, onEpisodeSelected: (String) -> Unit) {
     Column(Modifier.width(120.dp).padding(8.dp).clickable { onEpisodeSelected(episodeModel.videoUrl) }) {
         Image(
-            modifier = Modifier.height(200.dp).fillMaxWidth(),
+            modifier = Modifier.height(180.dp).fillMaxWidth(),
             contentDescription = null,
-            contentScale = ContentScale.Inside,
+            contentScale = ContentScale.Crop,
             painter = painterResource(getSeasonImage(episodeModel.season)),
         )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(text = episodeModel.episode, color = DefaultTextColor, fontWeight = FontWeight.Bold)
+
     }
 }
 

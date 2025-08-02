@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import org.arexdev.rickmortyapp.domain.model.CharacterModel
+import org.arexdev.rickmortyapp.ui.core.Green
 import org.arexdev.rickmortyapp.ui.core.components.PagingLoadingState
 import org.arexdev.rickmortyapp.ui.core.components.PagingType
 import org.arexdev.rickmortyapp.ui.core.components.PagingWrapper
@@ -66,7 +67,7 @@ fun CharacterItemList(characterModel: CharacterModel, onItemSelected: (Character
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(24))
-            .border(2.dp, Color.Green, shape = RoundedCornerShape(0, 24, 0, 24)).fillMaxSize()
+            .border(2.dp, Green, shape = RoundedCornerShape(0, 24, 0, 24)).fillMaxSize()
             .clickable {
                 onItemSelected(characterModel)
             },
@@ -104,11 +105,11 @@ fun CharacterOfTheDay(
     ) {
         if (characterModel == null) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(color = Color.Green)
+                CircularProgressIndicator(color = Green)
             }
         } else {
             Box(contentAlignment = Alignment.BottomStart) {
-                Box(Modifier.fillMaxSize().background(Color.Green.copy(alpha = 0.3f)))
+                Box(Modifier.fillMaxSize().background(Green))
 
                 AsyncImage(
                     model = characterModel.image,
